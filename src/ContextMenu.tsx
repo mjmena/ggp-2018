@@ -1,24 +1,29 @@
+import ReactDOM from "react-dom";
 import React, { useEffect, RefObject, useState } from "react";
 import { Vector } from "./types";
+import usePortalNode from "./hooks/usePortalNode";
 
 type Props = {
   el: RefObject<EventTarget>;
 };
 
-const ContextMenu = ({ el }: Props) => {
-  const [position, setPosition] = useState<Vector | null>(null);
+const ContextMenu: React.FunctionComponent<Props> = ({ el, children }) => {
+  const [position, setPosition] = useState<Vector>({ x: 0, y: 0 });
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
     function handleContextMenu(evt: Event) {
       if (evt instanceof MouseEvent) {
         evt.preventDefault();
-        evt.stopPropagation();
-        setPosition({ x: evt.clientX, y: evt.clientY });
+        setPosition({
+          x: evt.clientX,
+          y: evt.clientY
+        });
+        setOpen(true);
       }
     }
     function handleClick(evt: Event) {
-      if (evt instanceof MouseEvent) {
-        setPosition(null);
-      }
+      setOpen(lastOpen => (lastOpen ? false : lastOpen));
     }
 
     if (el && el.current) {
@@ -33,20 +38,22 @@ const ContextMenu = ({ el }: Props) => {
       }
     };
   }, [el]);
+
   return (
-    position && (
-      <div
-        style={{
-          position: "absolute",
-          top: position.y,
-          left: position.x,
-          width: 50,
-          height: 50,
-          backgroundColor: "blue"
-        }}
-      />
-    )
+    <div
+      style={{
+        transform: `translate(${position.x}px,${position.y}px)`,
+        backgroundColor: "blue",
+        zIndex: 10,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        display: open ? "block" : "none"
+      }}
+    >
+      {children}
+    </div>
   );
 };
 
-export default ContextMenu;
+export default React.memo(ContextMenu);

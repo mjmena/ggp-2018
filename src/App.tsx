@@ -48,13 +48,18 @@ function App() {
   }
 
   return (
-    <div ref={forMenu}>
-      <ContextMenu el={forMenu} />
-      <Grid origin={origin} viewport={viewport} spacing={spacing} />
+    <>
+      <ContextMenu el={forMenu}>Grid Clicked</ContextMenu>
+      <Grid
+        ref={forMenu}
+        origin={origin}
+        viewport={viewport}
+        spacing={spacing}
+      />
       {`(${origin.x},${origin.y})`}
       <button onClick={addEntity}>Add One</button>
       <Entities entities={entities} spacing={spacing} origin={origin} />
-    </div>
+    </>
   );
 }
 

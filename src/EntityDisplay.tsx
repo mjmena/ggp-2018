@@ -14,18 +14,21 @@ function EntityDisplay({ entity, origin, spacing }: Props) {
   const left = spacing * entity.position.x + origin.x;
   return (
     <>
-      <ContextMenu el={forMenu} />
       <div
         ref={forMenu}
         style={{
           position: "absolute",
-          top: top,
-          left: left,
+          top: 0,
+          left: 0,
+          transform: `translate(${left}px, ${top}px)`,
           width: spacing,
           height: spacing,
           backgroundColor: entity.color
         }}
       />
+      <ContextMenu el={forMenu}>
+        Entity at ({entity.position.x},{entity.position.y}) clicked
+      </ContextMenu>
     </>
   );
 }
