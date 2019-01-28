@@ -3,6 +3,7 @@ import useOffset from "./hooks/useOffset";
 import { Vector, Entity } from "./types";
 import DebugToolbar from "./DebugToolbar";
 import useViewport from "./hooks/useViewport";
+import Grid from "./Grid";
 
 interface EntityAction {
   type: "add" | "remove";
@@ -59,6 +60,7 @@ function App() {
 
   return (
     <>
+      <Grid viewport={viewport} offset={offset} spacing={spacing} />
       <DebugToolbar
         spacing={spacing}
         setSpacing={setSpacing}
