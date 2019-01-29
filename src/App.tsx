@@ -1,10 +1,9 @@
 import React, { useState, useReducer } from "react";
-import useOffset from "./hooks/useOffset";
 import { Vector, Entity } from "./types";
-import DebugToolbar from "./DebugToolbar";
-import useViewport from "./hooks/useViewport";
 import Grid from "./Grid";
 import Entities from "./Entities";
+import useViewport from "./hooks/useViewport";
+import useWheel from "./hooks/useWheel";
 
 interface EntityAction {
   type: "add" | "remove";
@@ -34,7 +33,7 @@ const getEntityAction = () =>
 
 function App() {
   const [entities, dispatch] = useReducer(entityReducer, []);
-  const [offset, setOffset] = useOffset({ x: 0, y: 0 });
+  const [offset, spacing] = useWheel({ x: 0, y: 0 }, 50);
   const viewport = useViewport();
 
   const origin: Vector = {
@@ -46,17 +45,9 @@ function App() {
     dispatch(getEntityAction());
   }
 
-  const [spacing, setSpacing] = useState(50);
-
   return (
     <>
       <Grid origin={origin} viewport={viewport} spacing={spacing} />
-      <DebugToolbar
-        spacing={spacing}
-        setSpacing={setSpacing}
-        offset={offset}
-        setOffset={setOffset}
-      />
       {`(${origin.x},${origin.y})`}
       <button onClick={addEntity}>Add One</button>
       <Entities entities={entities} spacing={spacing} origin={origin} />

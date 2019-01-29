@@ -17,25 +17,23 @@ function Grid({ viewport, origin, spacing }: Props) {
   const left = local_offset.x - spacing;
   const right = viewport.x + local_offset.x + spacing;
   const lats = range(left, right, spacing).map(x => {
-    //console.log(x);
-
     if (x === origin.x)
       return (
         <line key={x} x1={x} y1={0} x2={x} y2={viewport.y} stroke="black" />
       );
     return <line key={x} x1={x} y1={0} x2={x} y2={viewport.y} stroke="grey" />;
   });
-  const longs = range(
-    local_offset.y - spacing,
-    viewport.y + local_offset.y + spacing,
-    spacing
-  ).map(y => {
+
+  const top = local_offset.y - spacing;
+  const bottom = viewport.y + local_offset.y + spacing;
+  const longs = range(top, bottom, spacing).map(y => {
     if (y === origin.y)
       return (
         <line key={y} x1={0} y1={y} x2={viewport.x} y2={y} stroke="black" />
       );
     return <line key={y} x1={0} y1={y} x2={viewport.x} y2={y} stroke="grey" />;
   });
+
   return (
     <svg
       height={viewport.y}

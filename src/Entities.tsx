@@ -22,9 +22,7 @@ function Entities({ entities, origin, spacing }: Props) {
           height: spacing,
           backgroundColor: entity.color
         }}
-      >
-        ({top},{left})
-      </div>
+      />
     );
   });
   return <>{entityElements}</>;
