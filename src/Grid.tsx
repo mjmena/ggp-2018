@@ -4,17 +4,38 @@ import { range } from "lodash";
 
 type Props = {
   viewport: Vector;
-  offset: Vector;
+  origin: Vector;
   spacing: number;
 };
 
-function Grid({ viewport, offset, spacing }: Props) {
-  const lats = range(0, viewport.x, spacing).map(x => (
-    <line x1={x} y1={0} x2={x} y2={viewport.y} stroke="black" />
-  ));
-  const longs = range(0, viewport.y, spacing).map(y => (
-    <line x1={0} y1={y} x2={viewport.x} y2={y} stroke="black" />
-  ));
+function Grid({ viewport, origin, spacing }: Props) {
+  const local_offset = {
+    x: origin.x % spacing,
+    y: origin.y % spacing
+  };
+
+  const left = local_offset.x - spacing;
+  const right = viewport.x + local_offset.x + spacing;
+  const lats = range(left, right, spacing).map(x => {
+    //console.log(x);
+
+    if (x === origin.x)
+      return (
+        <line key={x} x1={x} y1={0} x2={x} y2={viewport.y} stroke="black" />
+      );
+    return <line key={x} x1={x} y1={0} x2={x} y2={viewport.y} stroke="grey" />;
+  });
+  const longs = range(
+    local_offset.y - spacing,
+    viewport.y + local_offset.y + spacing,
+    spacing
+  ).map(y => {
+    if (y === origin.y)
+      return (
+        <line key={y} x1={0} y1={y} x2={viewport.x} y2={y} stroke="black" />
+      );
+    return <line key={y} x1={0} y1={y} x2={viewport.x} y2={y} stroke="grey" />;
+  });
   return (
     <svg
       height={viewport.y}

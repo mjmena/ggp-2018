@@ -18,10 +18,12 @@ const DebugToolbar = ({ offset, setOffset, spacing, setSpacing }: Props) => {
 
   return (
     <>
-      (<input type="number" onInput={changeOffsetX} step={5} value={offset.x} />
+      (
+      <input type="number" onChange={changeOffsetX} step={5} value={offset.x} />
       ,
-      <input type="number" onInput={changeOffsetY} step={5} value={offset.y} />)
-      <input type="number" onInput={changeSpacing} value={spacing} />
+      <input type="number" onChange={changeOffsetY} step={5} value={offset.y} />
+      )
+      <input type="number" onChange={changeSpacing} value={spacing} />
     </>
   );
 };

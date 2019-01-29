@@ -4,6 +4,7 @@ import { Vector, Entity } from "./types";
 import DebugToolbar from "./DebugToolbar";
 import useViewport from "./hooks/useViewport";
 import Grid from "./Grid";
+import Entities from "./Entities";
 
 interface EntityAction {
   type: "add" | "remove";
@@ -24,8 +25,8 @@ const getEntityAction = () =>
     type: "add",
     entity: {
       position: {
-        x: Math.floor(Math.random() * 20) - 10,
-        y: Math.floor(Math.random() * 20) - 10
+        x: Math.floor(Math.random() * 10) - 5,
+        y: Math.floor(Math.random() * 10) - 5
       },
       color: "red"
     }
@@ -35,32 +36,21 @@ function App() {
   const [entities, dispatch] = useReducer(entityReducer, []);
   const [offset, setOffset] = useOffset({ x: 0, y: 0 });
   const viewport = useViewport();
+
   const origin: Vector = {
     x: Math.round(viewport.x / 2) + offset.x,
     y: Math.round(viewport.y / 2) + offset.y
   };
+
   function addEntity() {
     dispatch(getEntityAction());
   }
 
-  const [spacing, setSpacing] = useState(20);
-
-  const entityElements = entities.map(entity => (
-    <div
-      style={{
-        position: "absolute",
-        top: spacing * entity.position.y + origin.y,
-        left: spacing * entity.position.x + origin.x,
-        width: spacing,
-        height: spacing,
-        backgroundColor: entity.color
-      }}
-    />
-  ));
+  const [spacing, setSpacing] = useState(50);
 
   return (
     <>
-      <Grid viewport={viewport} offset={offset} spacing={spacing} />
+      <Grid origin={origin} viewport={viewport} spacing={spacing} />
       <DebugToolbar
         spacing={spacing}
         setSpacing={setSpacing}
@@ -69,7 +59,7 @@ function App() {
       />
       {`(${origin.x},${origin.y})`}
       <button onClick={addEntity}>Add One</button>
-      {entityElements}
+      <Entities entities={entities} spacing={spacing} origin={origin} />
     </>
   );
 }
