@@ -8,7 +8,7 @@ type Props = {
   spacing: number;
 };
 
-function Grid({ viewport, origin, spacing }: Props) {
+const Grid = ({ viewport, origin, spacing }: Props) => {
   const local_offset = {
     x: origin.x % spacing,
     y: origin.y % spacing
@@ -44,6 +44,6 @@ function Grid({ viewport, origin, spacing }: Props) {
       {longs}
     </svg>
   );
-}
+};
 
 export default React.memo(Grid);

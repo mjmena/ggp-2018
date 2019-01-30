@@ -1,5 +1,6 @@
 import React from "react";
 import { Entity, Vector } from "./types";
+import EntityDisplay from "./EntityDisplay";
 
 type Props = {
   entities: Entity[];
@@ -8,23 +9,14 @@ type Props = {
 };
 
 function Entities({ entities, origin, spacing }: Props) {
-  const entityElements = entities.map((entity, index) => {
-    const top = spacing * entity.position.y + origin.y;
-    const left = spacing * entity.position.x + origin.x;
-    return (
-      <div
-        key={index}
-        style={{
-          position: "absolute",
-          top: top,
-          left: left,
-          width: spacing,
-          height: spacing,
-          backgroundColor: entity.color
-        }}
-      />
-    );
-  });
+  const entityElements = entities.map((entity, index) => (
+    <EntityDisplay
+      key={index}
+      entity={entity}
+      spacing={spacing}
+      origin={origin}
+    />
+  ));
   return <>{entityElements}</>;
 }
 

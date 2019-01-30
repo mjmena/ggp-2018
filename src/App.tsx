@@ -1,9 +1,10 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useRef } from "react";
 import { Vector, Entity } from "./types";
 import Grid from "./Grid";
 import Entities from "./Entities";
 import useViewport from "./hooks/useViewport";
 import useWheel from "./hooks/useWheel";
+import ContextMenu from "./ContextMenu";
 
 interface EntityAction {
   type: "add" | "remove";
@@ -35,6 +36,7 @@ function App() {
   const [entities, dispatch] = useReducer(entityReducer, []);
   const [offset, spacing] = useWheel({ x: 0, y: 0 }, 50);
   const viewport = useViewport();
+  const forMenu = useRef(null);
 
   const origin: Vector = {
     x: Math.round(viewport.x / 2) + offset.x,
@@ -46,12 +48,13 @@ function App() {
   }
 
   return (
-    <>
+    <div ref={forMenu}>
+      <ContextMenu el={forMenu} />
       <Grid origin={origin} viewport={viewport} spacing={spacing} />
       {`(${origin.x},${origin.y})`}
       <button onClick={addEntity}>Add One</button>
       <Entities entities={entities} spacing={spacing} origin={origin} />
-    </>
+    </div>
   );
 }
 
