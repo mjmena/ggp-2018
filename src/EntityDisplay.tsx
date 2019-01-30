@@ -26,7 +26,7 @@ function EntityDisplay({ entity, origin, spacing }: Props) {
           backgroundColor: entity.color
         }}
       />
-      <ContextMenu el={forMenu}>
+      <ContextMenu element={forMenu}>
         Entity at ({entity.position.x},{entity.position.y}) clicked
       </ContextMenu>
     </>

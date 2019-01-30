@@ -1,15 +1,16 @@
 import ReactDOM from "react-dom";
 import React, { useEffect, RefObject, useState } from "react";
 import { Vector } from "./types";
-import usePortalNode from "./hooks/usePortalNode";
+import useAppendedElement from "./hooks/useAppendedElement";
 
 type Props = {
-  el: RefObject<EventTarget>;
+  element: RefObject<EventTarget>;
 };
 
-const ContextMenu: React.FunctionComponent<Props> = ({ el, children }) => {
+const ContextMenu: React.FunctionComponent<Props> = ({ element, children }) => {
   const [position, setPosition] = useState<Vector>({ x: 0, y: 0 });
   const [open, setOpen] = useState(false);
+  const parent = useAppendedElement();
 
   useEffect(() => {
     function handleContextMenu(evt: Event) {
@@ -19,32 +20,36 @@ const ContextMenu: React.FunctionComponent<Props> = ({ el, children }) => {
           x: evt.clientX,
           y: evt.clientY
         });
-        setOpen(true);
       }
     }
+
     function handleClick(evt: Event) {
-      setOpen(lastOpen => (lastOpen ? false : lastOpen));
+      if (
+        evt instanceof MouseEvent &&
+        evt.target === element.current &&
+        evt.button === 2
+      )
+        setOpen(lastOpen => (lastOpen ? false : true));
+      else setOpen(false);
     }
 
-    if (el && el.current) {
-      el.current.addEventListener("contextmenu", handleContextMenu);
-      document.addEventListener("mousedown", handleClick);
+    if (element && element.current) {
+      element.current.addEventListener("contextmenu", handleContextMenu);
+      document.addEventListener("mouseup", handleClick);
     }
 
     return () => {
-      if (el && el.current) {
-        el.current.removeEventListener("contextmenu", handleContextMenu);
-        document.addEventListener("mousedown", handleClick);
+      if (element && element.current) {
+        element.current.removeEventListener("contextmenu", handleContextMenu);
+        document.removeEventListener("mouseup", handleClick);
       }
     };
-  }, [el]);
+  }, [element]);
 
-  return (
+  return ReactDOM.createPortal(
     <div
       style={{
         transform: `translate(${position.x}px,${position.y}px)`,
-        backgroundColor: "blue",
-        zIndex: 10,
         position: "absolute",
         top: 0,
         left: 0,
@@ -52,7 +57,8 @@ const ContextMenu: React.FunctionComponent<Props> = ({ el, children }) => {
       }}
     >
       {children}
-    </div>
+    </div>,
+    parent
   );
 };
 
