@@ -9,30 +9,30 @@ type Props = {
 
 const ContextMenu: React.FunctionComponent<Props> = ({ element, children }) => {
   const [position, setPosition] = useState<Vector>({ x: 0, y: 0 });
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const parent = useAppendedElement();
 
+  function handleContextMenu(evt: Event) {
+    if (evt instanceof MouseEvent) {
+      evt.preventDefault();
+      setPosition({
+        x: evt.clientX,
+        y: evt.clientY
+      });
+    }
+  }
+
+  function handleClick(evt: Event) {
+    if (
+      evt instanceof MouseEvent &&
+      (evt.target === element.current || evt.target === parent.firstChild) &&
+      evt.button === 2
+    )
+      setOpen(true);
+    else setOpen(false);
+  }
+
   useEffect(() => {
-    function handleContextMenu(evt: Event) {
-      if (evt instanceof MouseEvent) {
-        evt.preventDefault();
-        setPosition({
-          x: evt.clientX,
-          y: evt.clientY
-        });
-      }
-    }
-
-    function handleClick(evt: Event) {
-      if (
-        evt instanceof MouseEvent &&
-        evt.target === element.current &&
-        evt.button === 2
-      )
-        setOpen(lastOpen => (lastOpen ? false : true));
-      else setOpen(false);
-    }
-
     if (element && element.current) {
       element.current.addEventListener("contextmenu", handleContextMenu);
       document.addEventListener("mouseup", handleClick);
@@ -44,7 +44,7 @@ const ContextMenu: React.FunctionComponent<Props> = ({ element, children }) => {
         document.removeEventListener("mouseup", handleClick);
       }
     };
-  }, [element]);
+  }, []);
 
   return ReactDOM.createPortal(
     <div
