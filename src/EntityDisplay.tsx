@@ -20,9 +20,9 @@ function EntityDisplay({ entity, origin, spacing }: Props) {
           position: "absolute",
           top: 0,
           left: 0,
-          transform: `translate(${left}px, ${top}px)`,
-          width: spacing,
-          height: spacing,
+          transform: `translate(${left + 1}px, ${top + 1}px)`,
+          width: spacing - 2,
+          height: spacing - 2,
           backgroundColor: entity.color
         }}
       />

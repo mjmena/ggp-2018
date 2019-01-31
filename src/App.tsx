@@ -28,7 +28,7 @@ function App() {
             x: Math.floor((e.clientX - origin.x) / spacing),
             y: Math.floor((e.clientY - origin.y) / spacing)
           },
-          color: "red"
+          color: "blue"
         }
       });
     },
