@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
+import Setup from "./Setup";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<Setup />, document.getElementById("root"));
