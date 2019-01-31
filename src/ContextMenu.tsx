@@ -2,6 +2,7 @@ import ReactDOM from "react-dom";
 import React, { useEffect, RefObject, useState } from "react";
 import { Vector } from "./types";
 import useAppendedElement from "./hooks/useAppendedElement";
+import useContextMenuStatus from "./hooks/useContextMenuStatus";
 
 type Props = {
   element: RefObject<EventTarget>;
@@ -9,7 +10,7 @@ type Props = {
 
 const ContextMenu: React.FunctionComponent<Props> = ({ element, children }) => {
   const [position, setPosition] = useState<Vector>({ x: 0, y: 0 });
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const parent = useAppendedElement();
 
   function handleContextMenu(evt: Event) {
