@@ -2,7 +2,6 @@ import ReactDOM from "react-dom";
 import React, { useEffect, RefObject, useState } from "react";
 import { Vector } from "./types";
 import useAppendedElement from "./hooks/useAppendedElement";
-import useContextMenuStatus from "./hooks/useContextMenuStatus";
 
 type Props = {
   element: RefObject<EventTarget>;
@@ -26,22 +25,30 @@ const ContextMenu: React.FunctionComponent<Props> = ({ element, children }) => {
   function handleClick(evt: Event) {
     if (
       evt instanceof MouseEvent &&
-      (evt.target === element.current || evt.target === parent.firstChild) &&
+      (evt.target === element.current ||
+        evt.target === parent ||
+        parent.contains(evt.target as Node)) &&
       evt.button === 2
     )
       setOpen(true);
     else setOpen(false);
   }
 
+  function handleDisable(e: Event) {
+    e.preventDefault();
+  }
+
   useEffect(() => {
     if (element && element.current) {
       element.current.addEventListener("contextmenu", handleContextMenu);
+      parent.addEventListener("contextmenu", handleDisable);
       document.addEventListener("mouseup", handleClick);
     }
 
     return () => {
       if (element && element.current) {
         element.current.removeEventListener("contextmenu", handleContextMenu);
+        parent.removeEventListener("contextmenu", handleDisable);
         document.removeEventListener("mouseup", handleClick);
       }
     };

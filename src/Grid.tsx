@@ -40,7 +40,13 @@ const Grid = ({ viewport, origin, spacing }: Props) => {
     <svg
       height={viewport.y}
       width={viewport.x}
-      style={{ position: "absolute", top: 0, left: 0, zIndex: -10 }}
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        zIndex: -10,
+        backgroundColor: "none"
+      }}
     >
       <g style={{ transform: `translate(${offset.x}px, 0px)` }}>
         {lats}
