@@ -1,7 +1,6 @@
 import React, { useReducer, useRef, MouseEvent, useCallback } from "react";
 import uuid from "uuid/v4";
 import { Vector } from "./types";
-import InteractionGrid from "./InteractionGrid";
 import Grid from "./Grid";
 import Entities from "./Entities";
 import useViewport from "./hooks/useViewport";
@@ -30,7 +29,7 @@ function App() {
             x: Math.floor((e.clientX - origin.x) / spacing),
             y: Math.floor((e.clientY - origin.y) / spacing)
           },
-          color: "blue"
+          color: "orange"
         }
       });
     },
@@ -42,8 +41,12 @@ function App() {
       <ContextMenu element={forContextMenu}>
         <button onClick={handleAddEntity}>Add One</button>
       </ContextMenu>
-      <Grid origin={origin} viewport={viewport} spacing={spacing} />
-      <InteractionGrid ref={forContextMenu} viewport={viewport} />
+      <Grid
+        ref={forContextMenu}
+        origin={origin}
+        viewport={viewport}
+        spacing={spacing}
+      />
       <span style={{ backgroundColor: "white" }}>{`(${offset.x},${
         offset.y
       })`}</span>

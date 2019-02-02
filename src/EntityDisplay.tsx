@@ -56,7 +56,7 @@ function EntityDisplay({ entity, origin, spacing, dispatch }: Props) {
           transform: `translate(${left + 1}px, ${top + 1}px)`,
           width: spacing - 2,
           height: spacing - 2,
-          backgroundColor: captured ? "pink" : entity.color
+          backgroundColor: captured ? "yellow" : entity.color
         }}
         onPointerDown={handleDown}
         onPointerUp={handleUp}
