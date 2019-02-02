@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Vector } from "../types";
 import useContextMenuStatus from "./useContextMenuStatus";
 
@@ -44,6 +44,5 @@ export default function useWheel(
     document.addEventListener("wheel", handleWheel);
     return () => document.removeEventListener("wheel", handleWheel);
   }, [open]);
-
   return [scroll, Math.round(zoom)] as [Vector, number];
 }

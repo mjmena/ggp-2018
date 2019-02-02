@@ -22,13 +22,12 @@ const ContextMenu: React.FunctionComponent<Props> = ({ element, children }) => {
     }
   }
 
-  function handleClick(evt: Event) {
+  function handleClick(evt: MouseEvent) {
     if (
-      evt instanceof MouseEvent &&
+      evt.button === 2 &&
       (evt.target === element.current ||
         evt.target === parent ||
-        parent.contains(evt.target as Node)) &&
-      evt.button === 2
+        parent.contains(evt.target as Node))
     )
       setOpen(true);
     else setOpen(false);

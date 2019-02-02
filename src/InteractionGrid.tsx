@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React from "react";
 import { Vector } from "./types";
 
 type Props = {
@@ -7,15 +7,18 @@ type Props = {
 
 const InteractionGrid = React.forwardRef<HTMLDivElement, Props>(
   ({ viewport }, ref) => {
-    const style: CSSProperties = {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: viewport.x,
-      height: viewport.y
-    };
-
-    return <div ref={ref} style={style} />;
+    return (
+      <div
+        ref={ref}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: viewport.x,
+          height: viewport.y
+        }}
+      />
+    );
   }
 );
 

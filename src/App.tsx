@@ -1,5 +1,5 @@
 import React, { useReducer, useRef, MouseEvent, useCallback } from "react";
-import { Vector, Entity } from "./types";
+import { Vector } from "./types";
 import InteractionGrid from "./InteractionGrid";
 import Grid from "./Grid";
 import Entities from "./Entities";
@@ -42,10 +42,15 @@ function App() {
       </ContextMenu>
       <Grid origin={origin} viewport={viewport} spacing={spacing} />
       <InteractionGrid ref={forContextMenu} viewport={viewport} />
-      <span style={{ backgroundColor: "white" }}>{`(${origin.x},${
-        origin.y
+      <span style={{ backgroundColor: "white" }}>{`(${offset.x},${
+        offset.y
       })`}</span>
-      <Entities entities={entities} spacing={spacing} origin={origin} />
+      <Entities
+        entities={entities}
+        spacing={spacing}
+        origin={origin}
+        dispatch={dispatch}
+      />
     </>
   );
 }

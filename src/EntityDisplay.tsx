@@ -1,17 +1,22 @@
-import React, { useRef } from "react";
+import React, { useRef, Dispatch } from "react";
 import { Entity, Vector } from "./types";
 import ContextMenu from "./ContextMenu";
+import { EntityAction } from "./reducers/entityReducer";
+
+function convertLocalToWorldPosition(position: Vector, spacing: number) {}
 
 type Props = {
   entity: Entity;
   origin: Vector;
   spacing: number;
+  dispatch: Dispatch<EntityAction>;
 };
 
-function EntityDisplay({ entity, origin, spacing }: Props) {
+function EntityDisplay({ entity, origin, spacing, dispatch }: Props) {
   const forMenu = useRef(null);
   const top = spacing * entity.position.y + origin.y;
   const left = spacing * entity.position.x + origin.x;
+
   return (
     <>
       <div
@@ -24,6 +29,21 @@ function EntityDisplay({ entity, origin, spacing }: Props) {
           width: spacing - 2,
           height: spacing - 2,
           backgroundColor: entity.color
+        }}
+        onPointerDown={e => {
+          if (e.target instanceof Element) {
+            e.target.setPointerCapture(e.pointerId);
+          }
+        }}
+        onPointerUp={e => {
+          dispatch({
+            type: "move",
+            entity,
+            position: {
+              x: Math.floor((origin.x - e.clientX) / spacing),
+              y: Math.floor((origin.y - e.clientY) / spacing)
+            }
+          });
         }}
       />
       <ContextMenu element={forMenu}>
