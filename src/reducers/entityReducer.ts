@@ -20,7 +20,7 @@ interface ColorAction {
 export type EntityAction = AddAction | MoveAction | ColorAction;
 
 export function entityReducer(state: Entity[], action: EntityAction): Entity[] {
-  console.log(action);
+  // console.log(action);
   switch (action.type) {
     case "add":
       return [...state, action.entity];

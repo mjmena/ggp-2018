@@ -1,4 +1,4 @@
-import React, { useRef, Dispatch, useState } from "react";
+import React, { useRef, Dispatch, useState, PointerEvent } from "react";
 import { Entity, Vector } from "./types";
 import ContextMenu from "./ContextMenu";
 import { EntityAction } from "./reducers/entityReducer";
@@ -23,13 +23,32 @@ type Props = {
 };
 
 function EntityDisplay({ entity, origin, spacing, dispatch }: Props) {
-  const forMenu = useRef(null);
+  const [captured, setCaptured] = useState(false);
+  const element = useRef<HTMLDivElement | null>(null);
   const top = spacing * entity.position.y + origin.y;
   const left = spacing * entity.position.x + origin.x;
+
+  const handleDown = (e: PointerEvent) => {
+    e.preventDefault();
+    if (element.current instanceof Element) {
+      element.current.setPointerCapture(e.pointerId);
+      setCaptured(true);
+    }
+  };
+
+  const handleUp = (e: PointerEvent) => {
+    setCaptured(false);
+    dispatch({
+      type: "move",
+      id: entity.id,
+      position: convertClickToLocal(e.clientX, e.clientY, origin, spacing)
+    });
+  };
+
   return (
     <>
       <div
-        ref={forMenu}
+        ref={element}
         style={{
           position: "absolute",
           top: 0,
@@ -37,47 +56,14 @@ function EntityDisplay({ entity, origin, spacing, dispatch }: Props) {
           transform: `translate(${left + 1}px, ${top + 1}px)`,
           width: spacing - 2,
           height: spacing - 2,
-          backgroundColor: entity.color
+          backgroundColor: captured ? "pink" : entity.color
         }}
-        onPointerDown={e => {
-          if (e.target === forMenu.current) {
-            e.preventDefault();
-            console.log(e.pointerId);
-            (e.target as Element).setPointerCapture(e.pointerId);
-            dispatch({
-              type: "color",
-              color: "red",
-              id: entity.id
-            });
-          }
-        }}
-        onPointerUp={e => {
-          if (e.target === forMenu.current) {
-            e.preventDefault();
-
-            console.log(e.pointerId);
-            (e.target as Element).releasePointerCapture(e.pointerId);
-            dispatch({
-              type: "color",
-              color: "yellow",
-              id: entity.id
-            });
-            dispatch({
-              type: "move",
-              id: entity.id,
-              position: convertClickToLocal(
-                e.clientX,
-                e.clientY,
-                origin,
-                spacing
-              )
-            });
-          }
-        }}
+        onPointerDown={handleDown}
+        onPointerUp={handleUp}
       >
         ({entity.position.x},{entity.position.y})
       </div>
-      <ContextMenu element={forMenu}>
+      <ContextMenu element={element}>
         <span style={{ backgroundColor: "white" }}>clicked</span>
       </ContextMenu>
     </>

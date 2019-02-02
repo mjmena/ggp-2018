@@ -41,14 +41,14 @@ const ContextMenu: React.FunctionComponent<Props> = ({ element, children }) => {
     if (element && element.current) {
       element.current.addEventListener("contextmenu", handleContextMenu);
       parent.addEventListener("contextmenu", handleDisable);
-      document.addEventListener("mouseup", handleClick);
+      document.addEventListener("pointerup", handleClick);
     }
 
     return () => {
       if (element && element.current) {
         element.current.removeEventListener("contextmenu", handleContextMenu);
         parent.removeEventListener("contextmenu", handleDisable);
-        document.removeEventListener("mouseup", handleClick);
+        document.removeEventListener("pointerup", handleClick);
       }
     };
   }, []);
