@@ -34,11 +34,21 @@ function EntityDisplay({ entity, origin, spacing, dispatch }: Props) {
           if (e.target instanceof Element) {
             e.target.setPointerCapture(e.pointerId);
           }
+          dispatch({
+            type: "color",
+            color: "red",
+            id: entity.id
+          });
         }}
         onPointerUp={e => {
           dispatch({
+            type: "color",
+            color: "yellow",
+            id: entity.id
+          });
+          dispatch({
             type: "move",
-            entity,
+            id: entity.id,
             position: {
               x: Math.floor((origin.x - e.clientX) / spacing),
               y: Math.floor((origin.y - e.clientY) / spacing)

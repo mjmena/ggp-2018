@@ -1,32 +1,43 @@
 import { Entity, Vector } from "../types";
 
-interface Action {
-  type: string;
+interface AddAction {
+  type: "add";
   entity: Entity;
 }
 
-interface SimpleAction extends Action {
-  type: "add" | "remove";
-}
-
-interface MoveAction extends Action {
+interface MoveAction {
   type: "move";
+  id: string;
   position: Vector;
 }
 
-export type EntityAction = SimpleAction | MoveAction;
+interface ColorAction {
+  type: "color";
+  id: string;
+  color: string;
+}
+
+export type EntityAction = AddAction | MoveAction | ColorAction;
 
 export function entityReducer(state: Entity[], action: EntityAction): Entity[] {
   switch (action.type) {
     case "add":
       return [...state, action.entity];
     case "move":
-      console.log(action.position);
-      return [
-        ...state.filter(entity => entity !== action.entity),
-        { ...action.entity, position: action.position }
-      ];
-    default:
-      return state;
+      const toMove = state.find(entity => entity.id === action.id);
+      if (toMove) {
+        return [
+          ...state.filter(e => e !== toMove),
+          { ...toMove, position: action.position }
+        ];
+      } else return state;
+    case "color":
+      const toColor = state.find(entity => entity.id === action.id);
+      if (toColor) {
+        return [
+          ...state.filter(e => e !== toColor),
+          { ...toColor, color: action.color }
+        ];
+      } else return state;
   }
 }

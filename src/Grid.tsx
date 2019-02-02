@@ -14,7 +14,7 @@ const style = {
 
 const boldStyle = {
   ...style,
-  stroke: "black",
+  stroke: "white",
   strokeWidth: 3
 };
 
@@ -45,7 +45,7 @@ const Grid = ({ viewport, origin, spacing }: Props) => {
         top: 0,
         left: 0,
         zIndex: -10,
-        backgroundColor: "none"
+        backgroundColor: "black"
       }}
     >
       <g style={{ transform: `translate(${offset.x}px, 0px)` }}>

@@ -4,6 +4,7 @@ export interface Vector {
 }
 
 export interface Entity {
+  id: string;
   position: Vector;
   color: string;
 }

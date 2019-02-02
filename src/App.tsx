@@ -1,4 +1,5 @@
 import React, { useReducer, useRef, MouseEvent, useCallback } from "react";
+import uuid from "uuid/v4";
 import { Vector } from "./types";
 import InteractionGrid from "./InteractionGrid";
 import Grid from "./Grid";
@@ -24,6 +25,7 @@ function App() {
       dispatch({
         type: "add",
         entity: {
+          id: uuid(),
           position: {
             x: Math.floor((e.clientX - origin.x) / spacing),
             y: Math.floor((e.clientY - origin.y) / spacing)
