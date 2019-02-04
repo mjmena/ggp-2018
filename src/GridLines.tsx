@@ -57,11 +57,19 @@ const GridLines = ({ viewport, origin, spacing }: Props) => {
   );
   return (
     <>
-      <g style={{ transform: `translate(${offset.x}px, 0px)` }}>
+      <g
+        style={{
+          transform: `translate(${offset.x}px, 0px)`
+        }}
+      >
         {lats}
         {xAxis}
       </g>
-      <g style={{ transform: `translate(0px, ${offset.y}px)` }}>
+      <g
+        style={{
+          transform: `translate(0px, ${offset.y}px)`
+        }}
+      >
         {longs}
         {yAxis}
       </g>

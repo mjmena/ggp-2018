@@ -38,8 +38,7 @@ const dragReducer = (state: State, action: Action): State => {
 };
 
 const useDragDelta = (ref: MutableRefObject<EventTarget | null>) => {
-  // const open = useContextMenuStatus(ref);
-  const open = false;
+  const open = useContextMenuStatus(ref);
   const [state, dispatch] = useReducer(dragReducer, {
     delta: { x: 0, y: 0 },
     last: { x: 0, y: 0 },
@@ -48,8 +47,9 @@ const useDragDelta = (ref: MutableRefObject<EventTarget | null>) => {
 
   useEffect(() => {
     const handlePointerDown = (e: Event) => {
+      e.preventDefault();
+
       if (e instanceof PointerEvent && e.target instanceof Element && !open) {
-        e.preventDefault();
         dispatch({ type: "start", last: { x: e.clientX, y: e.clientY } });
         e.target.setPointerCapture(e.pointerId);
       }
@@ -73,7 +73,15 @@ const useDragDelta = (ref: MutableRefObject<EventTarget | null>) => {
   useEffect(() => {
     const handlePointerMove = (e: Event) => {
       if (state.dragging && e instanceof PointerEvent) {
-        dispatch({ type: "update", last: { x: e.clientX, y: e.clientY } });
+        if (e.pointerType !== "mouse") {
+          if (
+            Math.abs(state.last.x - e.clientX) > 10 ||
+            Math.abs(state.last.y - e.clientY) > 10
+          ) {
+            dispatch({ type: "update", last: { x: e.clientX, y: e.clientY } });
+          }
+        } else
+          dispatch({ type: "update", last: { x: e.clientX, y: e.clientY } });
       }
     };
 
