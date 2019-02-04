@@ -1,17 +1,10 @@
-import React, {
-  useReducer,
-  useRef,
-  useCallback,
-  useState,
-  MouseEvent,
-  PointerEvent
-} from "react";
+import React, { useReducer, useRef, useCallback, MouseEvent } from "react";
 import uuid from "uuid/v4";
 import { Vector } from "./types";
 import Grid from "./Grid";
 import Entities from "./Entities";
 import useViewport from "./hooks/useViewport";
-import useWheel from "./hooks/useWheel";
+import useWheel from "./hooks/useWheelDelta";
 import ContextMenu from "./ContextMenu";
 import { entityReducer } from "./reducers/entityReducer";
 import usePointerDelta from "./hooks/usePointerDelta";
@@ -21,9 +14,7 @@ function App() {
   const [entities, dispatch] = useReducer(entityReducer, []);
 
   const viewport = useViewport();
-  // const [offset, spacing] = useWheel({ x: 0, y: 0 }, 50);
-  const spacing = 50;
-  // const [offset, setOffset] = useState({ x: 0, y: 0 } as Vector);
+  const spacing = useWheel(50);
   const offset = usePointerDelta(forContextMenu);
 
   const origin: Vector = {

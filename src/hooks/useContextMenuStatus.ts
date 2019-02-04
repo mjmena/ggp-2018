@@ -9,15 +9,15 @@ export default function useContextMenuStatus() {
 
   function handleMouseUp(evt: Event) {
     //check for right click and set open
-    if (evt instanceof MouseEvent && evt.button === 2) setStatus(true);
-    else setStatus(false);
+    if (evt instanceof PointerEvent && evt.button === 2) {
+      setStatus(true);
+    } else setStatus(false);
   }
 
   //attach and remove listeners
   useEffect(() => {
-    document.body.addEventListener("mouseup", handleMouseUp);
-    return () => document.body.removeEventListener("mouseup", handleMouseUp);
+    document.body.addEventListener("pointerup", handleMouseUp);
+    return () => document.body.removeEventListener("pointerup", handleMouseUp);
   }, []);
-
   return status;
 }

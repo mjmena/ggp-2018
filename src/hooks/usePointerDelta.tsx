@@ -1,5 +1,6 @@
 import { useEffect, useReducer, MutableRefObject } from "react";
 import { Vector } from "../types";
+import useContextMenuStatus from "./useContextMenuStatus";
 
 type State = {
   delta: Vector;
@@ -37,6 +38,7 @@ const dragReducer = (state: State, action: Action): State => {
 };
 
 const useDragDelta = (ref: MutableRefObject<EventTarget | null>) => {
+  const open = useContextMenuStatus();
   const [state, dispatch] = useReducer(dragReducer, {
     delta: { x: 0, y: 0 },
     last: { x: 0, y: 0 },
@@ -45,7 +47,7 @@ const useDragDelta = (ref: MutableRefObject<EventTarget | null>) => {
 
   useEffect(() => {
     const handlePointerDown = (e: Event) => {
-      if (e instanceof PointerEvent && e.target instanceof Element) {
+      if (e instanceof PointerEvent && e.target instanceof Element && !open) {
         e.preventDefault();
         dispatch({ type: "start", last: { x: e.clientX, y: e.clientY } });
         e.target.setPointerCapture(e.pointerId);
@@ -66,7 +68,7 @@ const useDragDelta = (ref: MutableRefObject<EventTarget | null>) => {
         }
       };
     }
-  }, [ref.current]);
+  }, [ref.current, open]);
   useEffect(() => {
     const handlePointerMove = (e: Event) => {
       if (state.dragging && e instanceof PointerEvent) {
