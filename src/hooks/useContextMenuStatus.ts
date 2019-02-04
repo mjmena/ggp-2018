@@ -1,51 +1,43 @@
 import { useEffect, useRef, MutableRefObject, useReducer } from "react";
 import contextMenuReducer from "../reducers/contextMenuReducer";
 import { Vector } from "../types";
+import useTimeoutWhenTrue from "./useTimeoutWhenTrue";
 
 /**
  * Checks to see if a context menu is open
  * on right click set to open otherwise return false
  */
 export default (ref: MutableRefObject<EventTarget | null>) => {
-  const timer = useRef<any>(null);
   const [state, dispatch] = useReducer(contextMenuReducer, {
     open: false,
-    locked: false,
+    isRightClick: false,
+    isLongPress: false,
     position: { x: 0, y: 0 },
     lastDownPosition: { x: 0, y: 0 }
   });
 
   const handleDown = (evt: Event) => {
     evt.preventDefault();
-    clearTimeout(timer.current);
-
-    if (evt instanceof PointerEvent && evt.target === ref.current) {
+    if (evt instanceof PointerEvent) {
       dispatch({ type: "down", position: { x: evt.clientX, y: evt.clientY } });
-      if (evt.button === 2) {
+      if (evt.button === 2 && evt.target === ref.current) {
         dispatch({
-          type: "open"
+          type: "startrightclick",
+          position: { x: evt.clientX, y: evt.clientY }
         });
-      } else if (evt.pointerType !== "mouse") {
-        timer.current = setTimeout(() => {
-          dispatch({
-            type: "longpressopen",
-            position: { x: evt.clientX, y: evt.clientY }
-          });
-        }, 1000);
+      }
+      if (evt.pointerType !== "mouse") {
+        dispatch({ type: "startlongpress" });
       }
     }
   };
 
   function handleUp(evt: Event) {
-    console.log("up", state);
-    if (state.open) {
-      //check for right click and set open
-      clearTimeout(timer.current);
-      if (state.locked) {
-        dispatch({ type: "unlock" });
-      } else dispatch({ type: "close" });
-    }
+    dispatch({ type: "up" });
   }
+
+  //start a timer whenever there is a possible long press and reset on change
+  useTimeoutWhenTrue(state.isLongPress, () => dispatch({ type: "open" }), 1000);
 
   //attach and remove listeners
   useEffect(() => {

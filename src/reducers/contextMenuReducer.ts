@@ -1,27 +1,50 @@
 import { Vector } from "../types";
 
 interface PositionAction {
-  type: "longpressopen" | "down";
+  type: "down" | "startrightclick";
   position: Vector;
 }
 
 interface SimpleAction {
-  type: "open" | "close" | "unlock";
+  type: "open" | "startlongpress" | "stoplongpress" | "up";
 }
 
 type Action = PositionAction | SimpleAction;
 
 type State = {
   open: boolean;
-  locked: boolean;
+  isRightClick: boolean;
+  isLongPress: boolean;
   lastDownPosition: Vector;
   position: Vector;
 };
 
 const contextMenuReducer = (state: State, action: Action) => {
+  console.log(action, state);
   switch (action.type) {
-    case "down":
-      return { ...state, lastDownPosition: action.position };
+    case "down": {
+      console.log(action.position);
+      return {
+        ...state,
+        lastDownPosition: action.position,
+        isLongPress: false
+      };
+    }
+    case "up": {
+      if (state.isRightClick) {
+        return {
+          ...state,
+          isRightClick: false
+        };
+      } else if (state.isLongPress) {
+        return { ...state };
+      } else {
+        return {
+          ...state,
+          open: false
+        };
+      }
+    }
     case "open":
       return {
         ...state,
@@ -29,23 +52,17 @@ const contextMenuReducer = (state: State, action: Action) => {
         locked: true,
         position: state.lastDownPosition
       };
-    case "unlock":
-      return { ...state, locked: false };
-    case "close":
-      return { ...state, open: false };
-    case "longpressopen": {
-      if (
-        Math.abs(action.position.x - state.lastDownPosition.x) < 15 &&
-        Math.abs(action.position.y - state.lastDownPosition.y) < 15
-      )
-        return {
-          ...state,
-          open: true,
-          locked: true,
-          position: state.lastDownPosition
-        };
-      else return state;
-    }
+    case "startlongpress":
+      return { ...state, isLongPress: true };
+    case "stoplongpress":
+      return { ...state, isLongPress: false };
+    case "startrightclick":
+      return {
+        ...state,
+        isRightClick: true,
+        open: true,
+        position: action.position
+      };
   }
 };
 

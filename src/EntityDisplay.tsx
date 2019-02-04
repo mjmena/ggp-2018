@@ -63,9 +63,9 @@ function EntityDisplay({ entity, origin, spacing, dispatch }: Props) {
       >
         ({entity.position.x},{entity.position.y})
       </div>
-      <ContextMenu element={element}>
+      {/* <ContextMenu element={element}>
         <span style={{ backgroundColor: "white" }}>clicked</span>
-      </ContextMenu>
+      </ContextMenu> */}
     </>
   );
 }
