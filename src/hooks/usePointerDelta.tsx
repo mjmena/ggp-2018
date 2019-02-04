@@ -38,7 +38,8 @@ const dragReducer = (state: State, action: Action): State => {
 };
 
 const useDragDelta = (ref: MutableRefObject<EventTarget | null>) => {
-  const open = useContextMenuStatus();
+  // const open = useContextMenuStatus(ref);
+  const open = false;
   const [state, dispatch] = useReducer(dragReducer, {
     delta: { x: 0, y: 0 },
     last: { x: 0, y: 0 },

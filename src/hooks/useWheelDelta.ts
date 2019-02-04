@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import useContextMenuStatus from "./useContextMenuStatus";
 
 /**
@@ -11,8 +11,8 @@ export default function useWheel(
   minDelta: number = 20
 ) {
   const [delta, setDelta] = useState(initialDelta);
-  const open = useContextMenuStatus();
-
+  // const open = useContextMenuStatus(useRef(document.body));
+  let open = false;
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
