@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, HTMLAttributes } from "react";
 import { Vector } from "./types";
 import GridLines from "./GridLines";
 
@@ -6,10 +6,10 @@ type Props = {
   viewport: Vector;
   origin: Vector;
   spacing: number;
-};
+} & HTMLAttributes<SVGSVGElement>;
 
 const Grid = React.forwardRef<SVGSVGElement, Props>(
-  ({ viewport, origin, spacing }, ref) => {
+  ({ viewport, origin, spacing, ...attrs }, ref) => {
     return (
       <svg
         ref={ref}
@@ -22,6 +22,7 @@ const Grid = React.forwardRef<SVGSVGElement, Props>(
           zIndex: -10,
           backgroundColor: "black"
         }}
+        {...attrs}
       >
         <GridLines viewport={viewport} origin={origin} spacing={spacing} />
       </svg>
