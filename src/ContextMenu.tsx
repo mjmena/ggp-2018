@@ -11,6 +11,11 @@ type Props = {
 const ContextMenu: React.FunctionComponent<Props> = ({ element, children }) => {
   const parent = useAppendedElement();
   const [open, position] = useContextMenuStatus(element);
+  useEffect(() => {
+    const disable = (e: Event) => e.preventDefault();
+    document.addEventListener("contextmenu", disable);
+    return () => document.removeEventListener("contextmenu", disable);
+  });
 
   return ReactDOM.createPortal(
     <div
